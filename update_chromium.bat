@@ -7,18 +7,30 @@ echo ***************************************************************************
 echo.
 wget -q --output-document=latest.txt http://commondatastorage.googleapis.com/chromium-browser-snapshots/Win/LAST_CHANGE
 for /f %%a in (latest.txt) do set lastest=%%a
-echo ***************************************
-echo *      lastest version is %lastest%.      *
-echo ***************************************
 echo.
-del /S /q mini_installer_%lastest%.exe
+echo.
+echo.
+echo ***************************************************************************
+echo *                      lastest version is %lastest%.                      *
+echo ***************************************************************************
+echo.
+echo.
+echo.
+echo.
+@del /S /q mini_installer_%lastest%.exe
 echo  Downloading mini_installer_%lastest%.exe, please wait...
 echo.
 wget -N http://commondatastorage.googleapis.com/chromium-browser-snapshots/Win/%lastest%/mini_installer.exe -v -p -r --output-document=mini_installer_%lastest%.exe
 echo  Download Finished.
 if exist mini_installer_%lastest%.exe goto there
 :there
-del /S /q latest.txt
+@del /S /q latest.txt
+
+tasklist |find /i "chrome.exe"
+if errorlevel==1 goto Yes
+if errorlevel==0 goto RequireCloseChrome
+
+:RequireCloseChrome
 type nul>%temp%\~YesOrNo.tmp
 echo.
 echo.
